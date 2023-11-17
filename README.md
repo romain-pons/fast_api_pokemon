@@ -5,7 +5,7 @@ Bienvenue dans le projet Pokémon API ! Cette API fournit des fonctionnalités p
 ## Installation
 
 1. Clonez ce depot sur votre machine locale via commande git :
-   
+  
 ```bash
 git clone  https://github.com/romain-pons/fast_api_pokemon.git
 ```
@@ -48,7 +48,6 @@ Téléchargez les dépendances nécessaires via
 pip install -r requirements.txt
 ```
 
-
 4. Mise en place de la base de données
 
 Si vous avez télécharger la base de données, vous n'avez pas besoin de créer une base de données, elle est déjà créée, au contraire si vous ne l'avez pas téléchargé ou que vous voulez exécuter le script, supprimez le fichier 'pokemon.db'
@@ -60,5 +59,21 @@ py pokemon_bdd.py
 ```
 
 Ce qui va exécuter le script afin de créer la base de données
-   
-   
+
+5. Utilisation de l'API
+
+Une fois la base de données créée, il faut aller dans le dossier api
+
+```bash
+cd ../api
+```
+
+Une fois dans ce dossier, vouz pouvez lancer l'application FsatAPI
+
+```bash
+uvicorn main:app --reload
+```
+
+L'application étant lancée, vous pouvez dès a présent consulter les différnents endpoint proposés
+Consultez la documentation générée automatiquement pour plus d'informations sur les endpoints et les modèles de données : http://127.0.0.1:8000/docs#/ 
+Ou les différents endpoints mis en commentaires dans le fichier main.py
