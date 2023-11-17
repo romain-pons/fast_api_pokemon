@@ -48,7 +48,7 @@ class CompetenceCreateUpdate(BaseModel):
 
 
 
-# Endpoint pour récupérer la liste de tous les pokémons
+# Endpoint pour récupérer la liste de tous les pokémons : http://127.0.0.1:8000/api/pokemons
 @app.get('/api/pokemons', response_model=dict)
 def get_all_pokemons():
     conn = sqlite3.connect('../bdd/pokemon.db')
@@ -79,7 +79,7 @@ def get_all_pokemons():
 
 
 
-# Endpoint pour récupérer les détails d'un Pokémon par ID
+# Endpoint pour récupérer les détails d'un Pokémon par ID : http://127.0.0.1:8000/api/pokemons/{id}'
 @app.get('/api/pokemons/{pokemon_id}', response_model=Pokemon)
 def get_pokemon_by_id(pokemon_id: int):
     conn = sqlite3.connect('../bdd/pokemon.db')
@@ -109,7 +109,7 @@ def get_pokemon_by_id(pokemon_id: int):
 
 
 
-# Endpoint pour récupérer la liste de tous les types
+# Endpoint pour récupérer la liste de tous les types : http://127.0.0.1:8000/api/types'
 @app.get('/api/types', response_model=list[Type])
 def get_all_types():
     conn = sqlite3.connect('../bdd/pokemon.db')
@@ -135,7 +135,7 @@ def get_all_types():
 
 
 
-# Endpoint pour récupérer les détails d'un Type par ID
+# Endpoint pour récupérer les détails d'un Type par ID : http://127.0.0.1:8000/api/types/{id}'
 @app.get('/api/types/{type_id}', response_model=Type)
 def get_type_by_id(type_id: int):
     conn = sqlite3.connect('../bdd/pokemon.db')
@@ -158,7 +158,7 @@ def get_type_by_id(type_id: int):
 
 
 
-# Endpoint pour récupérer la liste de toutes les compétences
+# Endpoint pour récupérer la liste de toutes les compétences : http://127.0.0.1:8000/api/competences'
 @app.get('/api/competences', response_model=list[Competence])
 def get_all_abilities():
     conn = sqlite3.connect('../bdd/pokemon.db')
@@ -189,7 +189,7 @@ def get_all_abilities():
 
 
 
-# Endpoint pour récupérer les détails d'une Compétence par ID
+# Endpoint pour récupérer les détails d'une Compétence par ID : http://127.0.0.1:8000/api/competences/{id}'
 @app.get('/api/competences/{ability_id}', response_model=Competence)
 def get_ability_by_id(ability_id: int):
     conn = sqlite3.connect('../bdd/pokemon.db')
