@@ -60,7 +60,7 @@ py pokemon_bdd.py
 
 Ce qui va exécuter le script afin de créer la base de données
 
-5. Utilisation de l'API
+## Utilisation
 
 Une fois la base de données créée, il faut aller dans le dossier api
 
