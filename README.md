@@ -12,7 +12,8 @@ git clone  https://github.com/romain-pons/fast_api_pokemon.git
 
 Ou en téléchargeant le zip du projet puis en le dezippant en local sur votre pc via le bouton Donwload zip
 
-![image](https://github.com/romain-pons/fast_api_pokemon/assets/75258269/f49f9614-ae42-4286-925e-62f98f18baee)
+![image](https://github.com/romain-pons/fast_api_pokemon/assets/75258269/9a4ce190-8476-400a-bdfe-246d9909ef05)
+
 
 2. Assurez vous d'avoir python d'installé sur votre machine
    
