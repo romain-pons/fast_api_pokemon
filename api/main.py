@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+# Création des models
 class Pokemon(BaseModel):
     id: int
     nom: str
@@ -51,10 +52,11 @@ class CompetenceCreateUpdate(BaseModel):
 # Endpoint pour récupérer la liste de tous les pokémons : http://127.0.0.1:8000/api/pokemons
 @app.get('/api/pokemons', response_model=dict)
 def get_all_pokemons():
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Sélection de tous les pokémons
+    # Sélection de tous les pokémons via la requete sql
     cursor.execute("SELECT * FROM pokemon")
     pokemons = cursor.fetchall()
 
@@ -82,10 +84,11 @@ def get_all_pokemons():
 # Endpoint pour récupérer les détails d'un Pokémon par ID : http://127.0.0.1:8000/api/pokemons/{id}'
 @app.get('/api/pokemons/{pokemon_id}', response_model=Pokemon)
 def get_pokemon_by_id(pokemon_id: int):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Sélection du Pokémon par ID
+    # Sélection du Pokémon par ID via la requete sql
     cursor.execute("SELECT * FROM pokemon WHERE id=?", (pokemon_id,))
     pokemon = cursor.fetchone()
 
@@ -95,6 +98,7 @@ def get_pokemon_by_id(pokemon_id: int):
         raise HTTPException(status_code=404, detail='Pokemon non trouvé')
 
 
+    # Conversion des résultats en format JSON
     pokemon = {
             'id': pokemon[0],
             'nom': pokemon[1],
@@ -112,10 +116,11 @@ def get_pokemon_by_id(pokemon_id: int):
 # Endpoint pour récupérer la liste de tous les types : http://127.0.0.1:8000/api/types'
 @app.get('/api/types', response_model=list[Type])
 def get_all_types():
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Sélection de tous les types
+    # Sélection de tous les types via la requete sql
     cursor.execute("SELECT * FROM type")
     types = cursor.fetchall()
 
@@ -138,10 +143,11 @@ def get_all_types():
 # Endpoint pour récupérer les détails d'un Type par ID : http://127.0.0.1:8000/api/types/{id}'
 @app.get('/api/types/{type_id}', response_model=Type)
 def get_type_by_id(type_id: int):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Sélection du Type par ID
+    # Sélection du Type par ID via la requete sql
     cursor.execute("SELECT * FROM type WHERE id=?", (type_id,))
     type_result = cursor.fetchone()
 
@@ -161,10 +167,11 @@ def get_type_by_id(type_id: int):
 # Endpoint pour récupérer la liste de toutes les compétences : http://127.0.0.1:8000/api/competences'
 @app.get('/api/competences', response_model=list[Competence])
 def get_all_abilities():
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Sélection de toutes les compétences
+    # Sélection de toutes les compétences via la requete sql
     cursor.execute("SELECT * FROM competence")
     competences = cursor.fetchall()
 
@@ -192,10 +199,11 @@ def get_all_abilities():
 # Endpoint pour récupérer les détails d'une Compétence par ID : http://127.0.0.1:8000/api/competences/{id}'
 @app.get('/api/competences/{ability_id}', response_model=Competence)
 def get_ability_by_id(ability_id: int):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Sélection de la Compétence par ID
+    # Sélection de la Compétence par ID via la requete sql
     cursor.execute("SELECT * FROM competence WHERE id=?", (ability_id,))
     ability_result = cursor.fetchone()
 
@@ -219,10 +227,11 @@ def get_ability_by_id(ability_id: int):
 # Endpoint pour ajouter un nouveau Pokémon
 @app.post('/api/pokemons', response_model=Pokemon)
 def add_pokemon(pokemon: PokemonCreateUpdate):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Insertion du nouveau Pokémon dans la base de données
+    # Insertion du nouveau Pokémon dans la base de données via la requete sql
     cursor.execute("""
         INSERT INTO pokemon (nom, taille, poids, statistique, image_url, type_id)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -248,10 +257,11 @@ def add_pokemon(pokemon: PokemonCreateUpdate):
 # Endpoint pour ajouter un nouveau Type
 @app.post('/api/types', response_model=Type)
 def add_type(type_create: TypeCreateUpdate):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Insertion du nouveau Type dans la base de données
+    # Insertion du nouveau Type dans la base de données via la requete sql
     cursor.execute("INSERT INTO type (nom) VALUES (?)", (type_create.nom,))
 
     conn.commit()
@@ -259,7 +269,7 @@ def add_type(type_create: TypeCreateUpdate):
     # Obtenez l'ID auto-incrémenté du nouveau Type
     new_type_id = cursor.lastrowid
 
-    # Sélectionnez le Type avec l'ID généré pour le renvoyer en réponse
+    # Sélectionnez le Type avec l'ID généré pour le renvoyer en réponse via la requete sql
     cursor.execute("SELECT * FROM type WHERE id=?", (new_type_id,))
     new_type = cursor.fetchone()
 
@@ -276,19 +286,21 @@ def add_type(type_create: TypeCreateUpdate):
 # Endpoint pour modifier un Pokémon par ID
 @app.put('/api/pokemons/{pokemon_id}', response_model=Pokemon)
 def update_pokemon(pokemon_id: int, pokemon_update: PokemonCreateUpdate):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
 
-    # Vérifier si le Pokémon existe
+    # Vérifier si le Pokémon existe via la requete sql
     cursor.execute("SELECT * FROM pokemon WHERE id=?", (pokemon_id,))
     existing_pokemon = cursor.fetchone()
 
+    # Gestion erreur pour id non existant
     if not existing_pokemon:
         conn.close()
         raise HTTPException(status_code=404, detail='Pokémon non trouvé')
 
-    # Mettre à jour les détails du Pokémon dans la base de données
+    # Mettre à jour les détails du Pokémon dans la base de données via la requete sql
     cursor.execute("""
         UPDATE pokemon
         SET nom=?, taille=?, poids=?, statistique=?, image_url=?, type_id=?
@@ -305,7 +317,7 @@ def update_pokemon(pokemon_id: int, pokemon_update: PokemonCreateUpdate):
 
     conn.commit()
 
-    # Récupérer les détails mis à jour du Pokémon
+    # Récupérer les détails mis à jour du Pokémon via la requete sql
     cursor.execute("SELECT * FROM pokemon WHERE id=?", (pokemon_id,))
     updated_pokemon = cursor.fetchone()
 
@@ -327,10 +339,11 @@ def update_pokemon(pokemon_id: int, pokemon_update: PokemonCreateUpdate):
 # Endpoint pour ajouter une nouvelle Compétence
 @app.post('/api/competences', response_model=Competence)
 def add_ability(ability_create: CompetenceCreateUpdate):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Insertion de la nouvelle Compétence dans la base de données
+    # Insertion de la nouvelle Compétence dans la base de données via la requete sql
     cursor.execute("""
         INSERT INTO competence (nom, description, puissance, precision, pp_max, type_id)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -348,7 +361,7 @@ def add_ability(ability_create: CompetenceCreateUpdate):
     # Obtenez l'ID auto-incrémenté de la nouvelle Compétence
     new_ability_id = cursor.lastrowid
 
-    # Sélectionnez la Compétence avec l'ID généré pour la renvoyer en réponse
+    # Sélectionnez la Compétence avec l'ID généré pour la renvoyer en réponse via la requete sql
     cursor.execute("SELECT * FROM competence WHERE id=?", (new_ability_id,))
     new_ability = cursor.fetchone()
 
@@ -369,18 +382,20 @@ def add_ability(ability_create: CompetenceCreateUpdate):
 # Endpoint pour modifier une compétence par ID
 @app.put('/api/competences/{ability_id}', response_model=Competence)
 def update_ability(ability_id: int, ability_update: CompetenceCreateUpdate):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Vérifier si la compétence existe
+    # Vérifier si la compétence existe via la requete sql
     cursor.execute("SELECT * FROM competence WHERE id=?", (ability_id,))
     existing_ability = cursor.fetchone()
 
+    # Gestion erreur pour id non existant
     if not existing_ability:
         conn.close()
         raise HTTPException(status_code=404, detail='Compétence non trouvée')
 
-    # Mettre à jour les détails de la compétence dans la base de données
+    # Mettre à jour les détails de la compétence dans la base de données via la requete sql
     cursor.execute("""
         UPDATE competence
         SET nom=?, description=?, puissance=?, precision=?, pp_max=?, type_id=?
@@ -397,7 +412,7 @@ def update_ability(ability_id: int, ability_update: CompetenceCreateUpdate):
 
     conn.commit()
 
-    # Récupérer les détails mis à jour de la compétence
+    # Récupérer les détails mis à jour de la compétence via la requete sql
     cursor.execute("SELECT * FROM competence WHERE id=?", (ability_id,))
     updated_ability = cursor.fetchone()
 
@@ -419,18 +434,20 @@ def update_ability(ability_id: int, ability_update: CompetenceCreateUpdate):
 # Endpoint pour modifier un type par ID
 @app.put('/api/types/{type_id}', response_model=Type)
 def update_type(type_id: int, type_update: TypeCreateUpdate):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Vérifier si le type existe
+    # Vérifier si le type existe via la requete sql
     cursor.execute("SELECT * FROM type WHERE id=?", (type_id,))
     existing_type = cursor.fetchone()
 
+    # Gestion erreur pour id non existant
     if not existing_type:
         conn.close()
         raise HTTPException(status_code=404, detail='Type non trouvé')
 
-    # Mettre à jour les détails du type dans la base de données
+    # Mettre à jour les détails du type dans la base de données via la requete sql
     cursor.execute("""
         UPDATE type
         SET nom=?
@@ -442,7 +459,7 @@ def update_type(type_id: int, type_update: TypeCreateUpdate):
 
     conn.commit()
 
-    # Récupérer les détails mis à jour du type
+    # Récupérer les détails mis à jour du type via la requete sql
     cursor.execute("SELECT * FROM type WHERE id=?", (type_id,))
     updated_type = cursor.fetchone()
 
@@ -458,18 +475,20 @@ def update_type(type_id: int, type_update: TypeCreateUpdate):
 # Endpoint pour supprimer un Pokémon par ID
 @app.delete('/api/pokemons/{pokemon_id}', response_model=dict)
 def delete_pokemon(pokemon_id: int):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Vérifier si le Pokémon existe
+    # Vérifier si le Pokémon existe via la requete sql
     cursor.execute("SELECT * FROM pokemon WHERE id=?", (pokemon_id,))
     existing_pokemon = cursor.fetchone()
 
+    # Gestion erreur pour id non existant
     if not existing_pokemon:
         conn.close()
         raise HTTPException(status_code=404, detail='Pokémon non trouvé')
 
-    # Supprimer le Pokémon de la base de données
+    # Supprimer le Pokémon de la base de données via la requete sql
     cursor.execute("DELETE FROM pokemon WHERE id=?", (pokemon_id,))
     conn.commit()
 
@@ -483,18 +502,20 @@ def delete_pokemon(pokemon_id: int):
 # Endpoint pour supprimer une compétence par ID
 @app.delete('/api/competences/{ability_id}', response_model=dict)
 def delete_ability(ability_id: int):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Vérifier si la compétence existe
+    # Vérifier si la compétence existe via la requete sql
     cursor.execute("SELECT * FROM competence WHERE id=?", (ability_id,))
     existing_ability = cursor.fetchone()
 
+    # Gestion erreur pour id non existant
     if not existing_ability:
         conn.close()
         raise HTTPException(status_code=404, detail='Compétence non trouvée')
 
-    # Supprimer la compétence de la base de données
+    # Supprimer la compétence de la base de données via la requete sql
     cursor.execute("DELETE FROM competence WHERE id=?", (ability_id,))
     conn.commit()
 
@@ -507,18 +528,20 @@ def delete_ability(ability_id: int):
 # Endpoint pour supprimer un type par ID
 @app.delete('/api/types/{type_id}', response_model=dict)
 def delete_type(type_id: int):
+    # Connexion a la base de données
     conn = sqlite3.connect('../bdd/pokemon.db')
     cursor = conn.cursor()
 
-    # Vérifier si le type existe
+    # Vérifier si le type existe via la requete sql
     cursor.execute("SELECT * FROM type WHERE id=?", (type_id,))
     existing_type = cursor.fetchone()
 
+    # Gestion erreur pour id non existant
     if not existing_type:
         conn.close()
         raise HTTPException(status_code=404, detail='Type non trouvé')
 
-    # Supprimer le type de la base de données
+    # Supprimer le type de la base de données via la requete sql
     cursor.execute("DELETE FROM type WHERE id=?", (type_id,))
     conn.commit()
 
